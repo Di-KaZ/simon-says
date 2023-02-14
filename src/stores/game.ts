@@ -11,13 +11,13 @@ export function sleep(ms: number) {
 }
 
 export class Colors {
-    public static readonly red = new Colors('red', 'bg-red-500 active:bg-red-800',  'bg-red-800 scale-90', 'col-start-2 ');
-    public static readonly blue = new Colors('blue', 'bg-blue-500 active:bg-blue-800',  'bg-blue-800 scale-90', 'col-start-3 row-start-2');
-    public static readonly green = new Colors('green', 'bg-green-500 active:bg-green-800',  'bg-green-800 scale-90', 'row-start-2');
-    public static readonly yellow = new Colors('yellow', 'bg-yellow-500 active:bg-yellow-800',  'bg-yellow-800 scale-90', 'col-start-2 row-start-3');
+    public static readonly red = new Colors('red', 'bg-red-500 active:bg-red-800', 'bg-red-800 scale-90', 'col-start-2 ');
+    public static readonly blue = new Colors('blue', 'bg-blue-500 active:bg-blue-800', 'bg-blue-800 scale-90', 'col-start-3 row-start-2');
+    public static readonly green = new Colors('green', 'bg-green-500 active:bg-green-800', 'bg-green-800 scale-90', 'row-start-2');
+    public static readonly yellow = new Colors('yellow', 'bg-yellow-500 active:bg-yellow-800', 'bg-yellow-800 scale-90', 'col-start-2 row-start-3');
     public static readonly ALL = [Colors.red, Colors.blue, Colors.green, Colors.yellow];
 
-    private constructor(public readonly color: string, public readonly classNames: string, public readonly activeByBot: string,public readonly  position: string) {
+    private constructor(public readonly color: string, public readonly classNames: string, public readonly activeByBot: string, public readonly position: string) {
     }
 }
 
@@ -27,6 +27,7 @@ export enum SimonStatus {
     answering,
     lost,
 }
+
 export const status = writable<SimonStatus>(SimonStatus.initial);
 export const sequence = writable<Colors[]>([]);
 export const round = writable(1);
@@ -56,8 +57,12 @@ recognition.maxAlternatives = 1;
 export function playWithVoice() {
     recognition.start()
     recognition.onresult = (event: SpeechRecognitionEvent) => {
-        const color = event.results[0][0].transcript;
-        console.log(color);
+        if (get(status) === SimonStatus.answering) {
+            const guessedColor = event.results[0][0].transcript;
+            colorPressedByPlayer.set(
+                Colors.ALL.find(color => guessedColor.includes(color.color))
+            );
+        }
     };
 }
 
@@ -83,6 +88,7 @@ export function checkColor(color: Colors) {
     idxOfColorToCheck.set(idx + 1);
     return false;
 }
+
 function addColorToSequence(sequence: Colors[], num: number): Colors[] {
     for (let i = 0; i < num; i++) {
         sequence.push(Colors.ALL[Math.floor(Math.random() * Colors.ALL.length)])
@@ -100,6 +106,7 @@ export async function playSequence(sequence: Colors[]) {
 }
 
 const notifSound = new Audio('/notification.mp3');
+
 export async function simonSay(): Promise<void> {
     notifSound.play();
     if (get(status) === SimonStatus.lost) round.set(1);
