@@ -9,14 +9,16 @@
         status, statusListener, playWithVoice
     } from "./stores/game.ts";
     import ColorButton from "./lib/ColorButton.svelte";
-    import {onDestroy} from "svelte";
+    import {onDestroy, onMount} from "svelte";
     import {requestNotifPerm} from "./stores/notifications.ts";
 
     const unsubAnswer = colorPressedByPlayer.subscribe(answerListener);
     const unsubVibrateBot = colorPressedByBot.subscribe(vibrate);
-    const unsubVibratePlayer = colorPressedByBot.subscribe(vibrate);
+    const unsubVibratePlayer = colorPressedByPlayer.subscribe(vibrate);
     const unsubRecognition = status.subscribe(statusListener);
+// onMount(() => addEventListener('deviceorientation', (event) => { console.log({x: event.alpha, y: event.gamma})}))
     requestNotifPerm();
+
     onDestroy(() => {
         unsubAnswer();
         unsubVibrateBot();
