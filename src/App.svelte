@@ -6,7 +6,7 @@
         colorPressedByPlayer,
         vibrate,
         colorPressedByBot,
-        playWithVoice
+         status, statusListener
     } from "./stores/game.ts";
     import ColorButton from "./lib/ColorButton.svelte";
     import {onDestroy} from "svelte";
@@ -15,12 +15,13 @@
     const unsubAnswer = colorPressedByPlayer.subscribe(answerListener);
     const unsubVibrateBot = colorPressedByBot.subscribe(vibrate);
     const unsubVibratePlayer = colorPressedByBot.subscribe(vibrate);
+    const unsubRecognition = status.subscribe(statusListener);
     requestNotifPerm();
-    playWithVoice();
     onDestroy(() => {
-        unsubAnswer()
-        unsubVibrateBot()
-        unsubVibratePlayer()
+        unsubAnswer();
+        unsubVibrateBot();
+        unsubVibratePlayer();
+        unsubRecognition();
     });
 </script>
 

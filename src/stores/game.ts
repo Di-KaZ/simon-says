@@ -6,15 +6,28 @@ var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
 var SpeechGrammarList = SpeechGrammarList || window.webkitSpeechGrammarList
 var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 
+
+const vocab = '#JSGF V1.0; grammar colors; public <color> = bleu | vert | rouge | jaune;';
+const recognition = new SpeechRecognition();
+const list = new SpeechGrammarList();
+list.addFromString(vocab, 1);
+recognition.grammars = list;
+recognition.continuous = true;
+recognition.lang = 'fr-FR';
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+recognition.start();
+
 export function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
 
 export class Colors {
-    public static readonly red = new Colors('red', 'bg-red-500 active:bg-red-800', 'bg-red-800 scale-90', 'col-start-2 ');
-    public static readonly blue = new Colors('blue', 'bg-blue-500 active:bg-blue-800', 'bg-blue-800 scale-90', 'col-start-3 row-start-2');
-    public static readonly green = new Colors('green', 'bg-green-500 active:bg-green-800', 'bg-green-800 scale-90', 'row-start-2');
-    public static readonly yellow = new Colors('yellow', 'bg-yellow-500 active:bg-yellow-800', 'bg-yellow-800 scale-90', 'col-start-2 row-start-3');
+    public static readonly red = new Colors('rouge', 'bg-red-500 active:bg-red-800', 'bg-red-800 scale-90', 'col-start-2 ');
+    public static readonly blue = new Colors('bleu', 'bg-blue-500 active:bg-blue-800', 'bg-blue-800 scale-90', 'col-start-3 row-start-2');
+    public static readonly green = new Colors('vert', 'bg-green-500 active:bg-green-800', 'bg-green-800 scale-90', 'row-start-2');
+    public static readonly yellow = new Colors('jaune', 'bg-yellow-500 active:bg-yellow-800', 'bg-yellow-800 scale-90', 'col-start-2 row-start-3');
     public static readonly ALL = [Colors.red, Colors.blue, Colors.green, Colors.yellow];
 
     private constructor(public readonly color: string, public readonly classNames: string, public readonly activeByBot: string, public readonly position: string) {
@@ -40,32 +53,34 @@ export function vibrate() {
     navigator.vibrate(200);
 }
 
+let idx = 0;
+
 export function answerListener(color: Colors) {
     if (checkColor(color)) simonSay();
 }
 
-const vocab = '#JSGF V1.0; grammar colors; public <color> = bleu | vert | rouge | jaune;';
-
-const recognition = new SpeechRecognition();
-const list = new SpeechGrammarList();
-list.addFromString(vocab, 1);
-recognition.grammars = list;
-recognition.lang = 'fr-FR';
-recognition.interimResults = false;
-recognition.maxAlternatives = 1;
-
-export function playWithVoice() {
-    recognition.start()
-    recognition.onresult = (event: SpeechRecognitionEvent) => {
-        if (get(status) === SimonStatus.answering) {
-            const guessedColor = event.results[0][0].transcript;
-            colorPressedByPlayer.set(
-                Colors.ALL.find(color => guessedColor.includes(color.color))
-            );
-        }
-    };
+export function statusListener() {
+    if (get(status) === SimonStatus.answering) {
+        console.log('setting onresult')
+        recognition.onresult = (event: SpeechRecognitionEvent) => {
+            const guessedColor = event.results[idx][0].transcript.toLowerCase();
+            console.log(guessedColor);
+            const color =
+                Colors.ALL.find(color => guessedColor.includes(color.color));
+            if (!color) {
+                console.log('cant understand retry');
+                idx += 1;
+                return;
+            }
+            colorPressedByPlayer.set(color);
+            console.log('guessed', color);
+            idx += 1;
+        };
+    } else {
+        console.log('removing onresult')
+        recognition.onresult = null;
+    }
 }
-
 export function checkColor(color: Colors) {
     if (!color) return;
     const seq = get(sequence);
