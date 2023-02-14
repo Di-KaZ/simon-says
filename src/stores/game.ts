@@ -1,5 +1,6 @@
 import {get, writable} from "svelte/store";
 import colors from "tailwindcss/colors";
+import {sendNotification} from "./notifications";
 
 export function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
@@ -31,7 +32,7 @@ export const colorPressedByPlayer = writable<Colors | null>(null);
 export const idxOfColorToCheck = writable(0);
 
 export function vibrate() {
-navigator.vibrate(200);
+    navigator.vibrate(200);
 }
 
 export function answerListener(color: Colors) {
@@ -43,6 +44,7 @@ export function checkColor(color: Colors) {
     const idx = get(idxOfColorToCheck);
     if (seq[idx] !== color) {
         status.set(SimonStatus.lost);
+        sendNotification(`You lasted ${get(round)} round(s) !\nTry again 🤷🏿`)
         idxOfColorToCheck.set(0);
         colorPressedByPlayer.set(null);
         sequence.set([]);
@@ -73,7 +75,10 @@ export async function playSequence(sequence: Colors[]) {
         await sleep(800);
     }
 }
+
+const notifSound = new Audio('/notification.mp3');
 export async function simonSay(): Promise<void> {
+    notifSound.play();
     if (get(status) === SimonStatus.lost) round.set(1);
     const seq = addColorToSequence(get(sequence), !get(sequence).length ? 4 : 1);
     status.set(SimonStatus.saying);

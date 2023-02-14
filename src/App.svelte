@@ -3,11 +3,12 @@
     import {answerListener, Colors, colorPressedByPlayer, vibrate, colorPressedByBot} from "./stores/game.ts";
     import ColorButton from "./lib/ColorButton.svelte";
     import {onDestroy} from "svelte";
+    import {requestNotifPerm} from "./stores/notifications.ts";
 
     const unsubAnswer = colorPressedByPlayer.subscribe(answerListener);
     const unsubVibrateBot = colorPressedByBot.subscribe(vibrate);
     const unsubVibratePlayer = colorPressedByBot.subscribe(vibrate);
-
+    requestNotifPerm();
     onDestroy(() => {
         unsubAnswer()
         unsubVibrateBot()
