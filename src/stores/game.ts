@@ -61,23 +61,18 @@ export function answerListener(color: Colors) {
 
 export function statusListener() {
     if (get(status) === SimonStatus.answering) {
-        console.log('setting onresult')
         recognition.onresult = (event: SpeechRecognitionEvent) => {
             const guessedColor = event.results[idx][0].transcript.toLowerCase();
-            console.log(guessedColor);
             const color =
                 Colors.ALL.find(color => guessedColor.includes(color.color));
             if (!color) {
-                console.log('cant understand retry');
                 idx += 1;
                 return;
             }
             colorPressedByPlayer.set(color);
-            console.log('guessed', color);
             idx += 1;
         };
     } else {
-        console.log('removing onresult')
         recognition.onresult = null;
     }
 }
