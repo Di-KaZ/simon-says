@@ -31,7 +31,7 @@ export const colorPressedByPlayer = writable<Colors | null>(null);
 export const idxOfColorToCheck = writable(0);
 
 export function vibrate() {
-navigator.vibrate(0);
+navigator.vibrate(200);
 }
 
 export function answerListener(color: Colors) {
