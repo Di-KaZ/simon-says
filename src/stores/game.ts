@@ -2,6 +2,10 @@ import {get, writable} from "svelte/store";
 import colors from "tailwindcss/colors";
 import {sendNotification} from "./notifications";
 
+var SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+var SpeechGrammarList = SpeechGrammarList || window.webkitSpeechGrammarList
+var SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
 export function sleep(ms: number) {
     return new Promise(resolve => setTimeout(resolve, ms));
 }
@@ -40,13 +44,6 @@ export function answerListener(color: Colors) {
 }
 
 const vocab = '#JSGF V1.0; grammar colors; public <color> = bleu | vert | rouge | jaune;';
-
-// @ts-ignore
-const SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
-// @ts-ignore
-const SpeechGrammarList = SpeechGrammarList || window.webkitSpeechGrammarList
-// @ts-ignore
-const SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
 
 const recognition = new SpeechRecognition();
 const list = new SpeechGrammarList();
