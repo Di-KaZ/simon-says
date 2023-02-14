@@ -1,6 +1,13 @@
 <script>
     import ScoreBoard from "./lib/ScoreBoard.svelte";
-    import {answerListener, Colors, colorPressedByPlayer, vibrate, colorPressedByBot} from "./stores/game.ts";
+    import {
+        answerListener,
+        Colors,
+        colorPressedByPlayer,
+        vibrate,
+        colorPressedByBot,
+        playWithVoice
+    } from "./stores/game.ts";
     import ColorButton from "./lib/ColorButton.svelte";
     import {onDestroy} from "svelte";
     import {requestNotifPerm} from "./stores/notifications.ts";
@@ -9,6 +16,7 @@
     const unsubVibrateBot = colorPressedByBot.subscribe(vibrate);
     const unsubVibratePlayer = colorPressedByBot.subscribe(vibrate);
     requestNotifPerm();
+    playWithVoice();
     onDestroy(() => {
         unsubAnswer()
         unsubVibrateBot()

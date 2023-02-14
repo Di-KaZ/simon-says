@@ -38,6 +38,25 @@ export function vibrate() {
 export function answerListener(color: Colors) {
     if (checkColor(color)) simonSay();
 }
+
+const vocab = '#JSGF V1.0; grammar colors; public <color> = bleu | vert | rouge | jaune;';
+
+const recognition = new SpeechRecognition();
+const list = new SpeechGrammarList();
+list.addFromString(vocab, 1);
+recognition.grammars = list;
+recognition.lang = 'fr-FR';
+recognition.interimResults = false;
+recognition.maxAlternatives = 1;
+
+export function playWithVoice() {
+    recognition.start()
+    recognition.onresult = (event: SpeechRecognitionEvent) => {
+        const color = event.results[0][0].transcript;
+        console.log(color);
+    };
+}
+
 export function checkColor(color: Colors) {
     if (!color) return;
     const seq = get(sequence);

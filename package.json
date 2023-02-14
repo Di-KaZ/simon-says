@@ -25,6 +25,7 @@
     "vite-plugin-pwa": "^0.14.4"
   },
   "dependencies": {
+    "@types/dom-speech-recognition": "^0.0.1",
     "clsx": "^1.2.1"
   }
 }
