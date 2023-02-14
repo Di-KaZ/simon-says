@@ -15,6 +15,7 @@ export default defineConfig({
       "name": "Simon Says",
       "short_name": "Simon Says",
       "description": "play simon say",
+      "orientation": 'landscape',
       "icons": [
         {
           "src": "/icon-192x192.png",
