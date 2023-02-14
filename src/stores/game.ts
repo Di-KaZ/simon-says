@@ -30,6 +30,10 @@ export const colorPressedByBot = writable<Colors | null>(null);
 export const colorPressedByPlayer = writable<Colors | null>(null);
 export const idxOfColorToCheck = writable(0);
 
+export function vibrate() {
+navigator.vibrate(0);
+}
+
 export function answerListener(color: Colors) {
     if (checkColor(color)) simonSay();
 }
