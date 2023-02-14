@@ -41,6 +41,13 @@ export function answerListener(color: Colors) {
 
 const vocab = '#JSGF V1.0; grammar colors; public <color> = bleu | vert | rouge | jaune;';
 
+// @ts-ignore
+const SpeechRecognition = SpeechRecognition || webkitSpeechRecognition
+// @ts-ignore
+const SpeechGrammarList = SpeechGrammarList || window.webkitSpeechGrammarList
+// @ts-ignore
+const SpeechRecognitionEvent = SpeechRecognitionEvent || webkitSpeechRecognitionEvent
+
 const recognition = new SpeechRecognition();
 const list = new SpeechGrammarList();
 list.addFromString(vocab, 1);
