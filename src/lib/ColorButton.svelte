@@ -15,11 +15,10 @@
 <div class={clsx("flex items-center justify-center", color.position)}>
     <button
             class={clsx(
- "h-full aspect-square transition-all active:scale-90",
+ "h-full aspect-square transition-all active:scale- bg-gr",
  $status !== SimonStatus.answering && "pointer-events-none",
- color.classNames,
   color.position,
-  color === $colorPressedByBot && color.activeByBot
+  color === $colorPressedByBot || color === $colorPressedByPlayer ? color.active : color.inactive
   )
   } on:click={() => colorPressedByPlayer.set(color)}>
     </button>

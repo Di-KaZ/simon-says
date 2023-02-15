@@ -16,7 +16,7 @@
     const unsubVibrateBot = colorPressedByBot.subscribe(vibrate);
     const unsubVibratePlayer = colorPressedByPlayer.subscribe(vibrate);
     const unsubRecognition = status.subscribe(statusListener);
-// onMount(() => addEventListener('deviceorientation', (event) => { console.log({x: event.alpha, y: event.gamma})}))
+// onMount(() => addEventListener('deviceorientation', (event) => { console.log({x: event.alpha, y: event.beta})}))
     requestNotifPerm();
 
     onDestroy(() => {

@@ -25,13 +25,13 @@ export function sleep(ms: number) {
 }
 
 export class Colors {
-    public static readonly red = new Colors('rouge', 'bg-red-500 active:bg-red-800', 'bg-red-800 scale-90', 'rounded-tl-full');
-    public static readonly blue = new Colors('bleu', 'bg-blue-500 active:bg-blue-800', 'bg-blue-800 scale-90', 'rounded-tr-full');
-    public static readonly green = new Colors('vert', 'bg-green-500 active:bg-green-800', 'bg-green-800 scale-90', 'rounded-bl-full');
-    public static readonly yellow = new Colors('jaune', 'bg-yellow-500 active:bg-yellow-800', 'bg-yellow-800 scale-90', 'rounded-br-full');
+    public static readonly red = new Colors('rouge', 'bg-red-500', 'bg-red-800 scale-90', 'rounded-tl-full');
+    public static readonly blue = new Colors('bleu', 'bg-blue-500', 'bg-blue-800 scale-90', 'rounded-tr-full');
+    public static readonly green = new Colors('vert', 'bg-green-500', 'bg-green-800 scale-90', 'rounded-bl-full');
+    public static readonly yellow = new Colors('jaune', 'bg-yellow-500', 'bg-yellow-800 scale-90', 'rounded-br-full');
     public static readonly ALL = [Colors.red, Colors.blue, Colors.green, Colors.yellow];
 
-    private constructor(public readonly color: string, public readonly classNames: string, public readonly activeByBot: string, public readonly position: string) {
+    private constructor(public readonly color: string, public readonly inactive: string, public readonly active: string, public readonly position: string) {
     }
 }
 
@@ -71,6 +71,7 @@ export function statusListener() {
                 return;
             }
             colorPressedByPlayer.set(color);
+             sleep(800).then(_ => colorPressedByPlayer.set(null));
             idx += 1;
         };
     } else {
